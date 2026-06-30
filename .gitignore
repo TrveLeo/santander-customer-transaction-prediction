@@ -4,6 +4,7 @@ data/test.csv
 
 # Modelos grandes
 models/random_forest.pkl
+models/*.npy
 
 # Submissions
 submission_*.csv
