@@ -114,6 +114,28 @@ A métrica oficial do desafio é a \textbf{AUC-ROC}, definida como a área sob a
 % ----------------------- PRÉ-PROCESSAMENTO -----------------------
 \section{Pré-processamento}
 
+O pré-processamento foi implementado em um script dedicado (\texttt{preprocessing.py}), separado do treinamento dos modelos. Essa separação garante que a transformação dos dados seja realizada uma única vez e de forma consistente entre todos os modelos, evitando reprocessamentos desnecessários e possíveis inconsistências.
+
+O fluxo executado pelo script é:
+
+\begin{enumerate}
+    \item Carregamento dos dados brutos;
+    \item Verificação de qualidade;
+    \item Padronização das features;
+    \item Geração da subamostra para o SVM;
+    \item Exportação dos arrays prontos para o treinamento.
+\end{enumerate}
+
+\subsection{Verificação de qualidade}
+
+Antes de qualquer transformação, foram verificados:
+
+\begin{itemize}
+    \item \textbf{Valores ausentes:} nenhum ausente identificado no treino ou no teste;
+    \item \textbf{Features constantes:} nenhuma feature apresentou valor único para todas as amostras;
+    \item \textbf{Distribuição do target:} 20.098 positivos em 200.000 amostras (10,0\%), confirmando desbalanceamento moderado.
+\end{itemize}
+
 \subsection{Padronização}
 
 Todos os atributos foram padronizados com média zero e desvio padrão unitário por meio do \texttt{StandardScaler}:
@@ -122,7 +144,7 @@ Todos os atributos foram padronizados com média zero e desvio padrão unitário
 x_{\text{pad}} = \frac{x - \mu}{\sigma}
 \]
 
-A padronização é obrigatória para o SVM e o k-NN, pois esses algoritmos são sensíveis à escala dos atributos. Para o Naive Bayes Gaussiano, a padronização também contribui para uma melhor estimativa das distribuições por classe. O \textit{scaler} foi ajustado apenas nos dados de treino e aplicado ao conjunto de teste, evitando vazamento de informação.
+A padronização é obrigatória para o SVM, pois esse algoritmo é sensível à escala dos atributos — features com maior amplitude dominariam o cálculo da margem. Para o Naive Bayes Gaussiano, a padronização favorece a estimativa das distribuições por classe. O \textit{scaler} foi ajustado exclusivamente nos dados de treino e aplicado ao conjunto de teste, evitando vazamento de informação (\textit{data leakage}).
 
 \subsection{Tratamento do desbalanceamento}
 
@@ -133,6 +155,16 @@ w_c = \frac{n}{k \cdot n_c}
 \]
 
 onde $n$ é o número total de amostras, $k$ é o número de classes e $n_c$ é o número de amostras da classe $c$. Com isso, o modelo penaliza mais os erros na classe minoritária, compensando o desequilíbrio sem necessidade de reamostrar os dados.
+
+\subsection{Subamostra estratificada para o SVM}
+
+O SVM com kernel RBF tem custo de treinamento $O(n^2)$ a $O(n^3)$, tornando inviável o treino direto sobre 200.000 amostras. Para contornar essa limitação, o pré-processamento gera uma \textbf{subamostra estratificada de 20.000 amostras}, preservando a proporção original de classes (~10\% positivo):
+
+\[
+n_{\text{pos}} = \lfloor 20.000 \times 0{,}10 \rfloor = 2.009, \quad n_{\text{neg}} = 17.991
+\]
+
+A seleção é realizada aleatoriamente com semente fixa (\texttt{random\_state=42}), garantindo reprodutibilidade.
 
 \subsection{Validação cruzada estratificada}
 
