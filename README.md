@@ -40,15 +40,23 @@ pip install pandas numpy scikit-learn matplotlib
 
 **3. Executar**
 ```bash
-python eda.py       # análise exploratória → eda_output/
-python train.py     # treina modelos → models/ + submissions
-python analise.py   # análise comparativa → analise_output/
+python eda.py            # análise exploratória → eda_output/
+python preprocessing.py  # padronização e subamostra → models/
+python train.py          # treina modelos → models/ + submissions
+python analise.py        # análise comparativa → analise_output/
 ```
+
+## Pipeline
+
+| Script | Responsabilidade |
+|---|---|
+| `eda.py` | Análise exploratória: distribuição, separação por classe, padrão de features |
+| `preprocessing.py` | Padronização (`StandardScaler`), verificação de qualidade, subamostra SVM |
+| `train.py` | Treino dos 3 modelos com `StratifiedKFold(5)`, métricas e submissions |
+| `analise.py` | Curvas ROC/PR, matrizes de confusão, importância de features |
 
 ## Modelos
 
-- **Random Forest** — ensemble de 200 árvores, `class_weight='balanced'`, validação com `StratifiedKFold(5)`
+- **Random Forest** — ensemble de 200 árvores, `class_weight='balanced'`
 - **Naive Bayes Gaussiano** — classificador probabilístico, assume independência condicional entre features
 - **SVM (kernel RBF)** — subamostra estratificada de 20k amostras por limitação de custo $O(n^2)$
-
-Todos os modelos usam `StandardScaler` e `StratifiedKFold(5)` para validação cruzada.
