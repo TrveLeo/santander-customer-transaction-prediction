@@ -1,0 +1,24 @@
+# Dados pesados (>100MB — limite GitHub)
+data/train.csv
+data/test.csv
+
+# Modelos grandes
+models/random_forest.pkl
+
+# Submissions
+submission_*.csv
+
+# LaTeX auxiliares
+*.aux
+*.log
+*.toc
+*.out
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Conteúdo interno
+conteudo/
+overview/
