@@ -61,7 +61,7 @@
 \hspace{7cm}
 \parbox{8cm}{
 \small
-Relatório apresentado à disciplina de Aulas de Dados e Aprendizado de Máquina, do curso de Engenharia Elétrica do Instituto Federal do Espírito Santo, como requisito parcial para avaliação.\\
+Relatório apresentado à disciplina de Aprendizado de Máquina, do curso de Engenharia Elétrica do Instituto Federal do Espírito Santo, como requisito parcial para avaliação.\\
 \newline
 Prof.ª Dr.ª Mariana Rampinelli Fernandes
 }
@@ -148,7 +148,7 @@ A padronização é obrigatória para o SVM, pois esse algoritmo é sensível à
 
 \subsection{Tratamento do desbalanceamento}
 
-O parâmetro \texttt{class\_weight='balanced'} foi utilizado nos modelos Random Forest e SVM. Esse parâmetro ajusta automaticamente os pesos das classes de forma inversamente proporcional à sua frequência:
+O parâmetro \texttt{class\_weight='balanced'} foi utilizado nos modelos Random Forest e SVM. Esse parâmetro ajusta automaticamente os pesos das classes de forma inversamente proporcional à sua frequência. O Naive Bayes Gaussiano não utiliza esse parâmetro, mas trata o desbalanceamento implicitamente pela estimativa da probabilidade a priori $P(C)$ a partir da frequência real das classes no conjunto de treino.
 
 \[
 w_c = \frac{n}{k \cdot n_c}
@@ -216,7 +216,7 @@ K(x_i, x_j) = \exp\!\left(-\gamma \|x_i - x_j\|^2\right)
 
 O parâmetro $C = 1{,}0$ controla o equilíbrio entre a margem e os erros de classificação. O parâmetro $\gamma$ foi definido automaticamente como \texttt{'scale'}, equivalente a $1 / (d \cdot \sigma^2_X)$.
 
-\textbf{Limitação computacional:} o SVM com kernel tem custo de treinamento $O(n^2)$ a $O(n^3)$, tornando inviável o treino direto sobre 200.000 amostras. Para contornar essa limitação, foi utilizada uma \textbf{subamostra estratificada de 20.000 amostras} (10\% positivo), mantendo a proporção de classes. A validação cruzada foi realizada dentro desta subamostra, e os resultados não são diretamente comparáveis aos dos demais modelos.
+\textbf{Limitação computacional:} o SVM com kernel tem custo de treinamento $O(n^2)$ a $O(n^3)$, tornando inviável o treino direto sobre 200.000 amostras. A subamostra estratificada de 20.000 amostras gerada na etapa de pré-processamento (Seção~3) foi utilizada para viabilizar o treinamento. A validação cruzada foi realizada dentro desta subamostra, e os resultados não são diretamente comparáveis aos dos demais modelos.
 
 \newpage
 
